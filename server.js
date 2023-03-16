@@ -5,6 +5,7 @@ const cookieParser = require('cookie-parser')
 const MongoDBStore = require('connect-mongodb-session')(session);
 const connect = require('./db/dbConnection');
 const userHelper = require("./helpers/UserHelper");
+const findHelper = require("./helpers/FriendsHelper");
 
 const app = express();
 app.use(express.json());
@@ -52,6 +53,16 @@ app.get("/signout", async (req, res) => {
   req.session.destroy();
   res.json({});
 });
+
+app.post("/find-friends", async (req, res) => {
+  let query = req.body.query.trim();
+  let searchResults = await findHelper.findFriends(query);
+  searchResults = searchResults
+                    .slice(0,10)
+                    .map(({password, email, ...rest}) => rest)
+                    .filter((data) => data._id.toString() !== req.session.user._id.toString() && data )
+  res.send({searchResults});
+})
 
 app.post("/signin", async (req, res) => {
   userHelper.signIn(req.body).then((user) => {

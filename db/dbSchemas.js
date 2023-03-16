@@ -8,7 +8,8 @@ module.exports = {
             fullname: String,
             username: String,
             email: String,
-            password: String
+            password: String,
+            color: String
         },{collection: 'users', versionKey: false})
         return userSchema;
     }

@@ -2,6 +2,16 @@ const model = require('../db/dbModels')
 const bcrypt = require("bcrypt");
 const userModel = model.Users();
 
+// Genarate random color for user avatar
+function generateRandomColor(){
+    let maxVal = 0xFFFFFF; // 16777215
+    let randomNumber = Math.random() * maxVal; 
+    randomNumber = Math.floor(randomNumber);
+    randomNumber = randomNumber.toString(16);
+    let randColor = randomNumber.padStart(6, 0);   
+    return randColor.toUpperCase()
+}
+
 module.exports = {
     signUp: async (userData) => {
         return new Promise(async (resolve, reject) => {
@@ -18,6 +28,7 @@ module.exports = {
                 return
             } else {
                 userData.password = await bcrypt.hash(userData.password, 10)
+                userData.color = generateRandomColor();
                 new userModel(userData).save();
                 resolve();
             }
