@@ -1,5 +1,4 @@
 const mongoose = require('mongoose')
-
 const Schema = mongoose.Schema;
 
 module.exports = {
@@ -12,5 +11,15 @@ module.exports = {
             color: String
         },{collection: 'users', versionKey: false})
         return userSchema;
+    },
+    friendSchema: ()=>{
+        const friendSchema = Schema({
+            userId: mongoose.Schema.Types.ObjectId,
+            friends: Array,
+            requests: Array,
+            pending: Array
+        },{collection: 'friends', versionKey: false})
+        return friendSchema;
     }
 }
+  

@@ -1,11 +1,11 @@
 const express = require("express");
 const cors = require("cors");
-const session = require('express-session')
+const session = require('express-session');
 const cookieParser = require('cookie-parser')
 const MongoDBStore = require('connect-mongodb-session')(session);
 const connect = require('./db/dbConnection');
 const userHelper = require("./helpers/UserHelper");
-const findHelper = require("./helpers/FriendsHelper");
+const friendsHelper = require("./helpers/FriendsHelper");
 
 const app = express();
 app.use(express.json());
@@ -56,11 +56,11 @@ app.get("/signout", async (req, res) => {
 
 app.post("/find-friends", async (req, res) => {
   let query = req.body.query.trim();
-  let searchResults = await findHelper.findFriends(query);
+  let searchResults = await friendsHelper.findFriends(query);
   searchResults = searchResults
-                    .slice(0,10)
                     .map(({password, email, ...rest}) => rest)
                     .filter((data) => data._id.toString() !== req.session.user._id.toString() && data )
+  searchResults = await friendsHelper.addFriendsStatus(req.session.user._id, searchResults)
   res.send({searchResults});
 })
 
@@ -81,4 +81,11 @@ app.post('/signup', async (req, res) => {
   })
 })
 
-app.listen(5000, () => console.log(`Server running on port 5000`));
+const server = app.listen(5000, () => console.log(`Server running on port 5000`));
+
+const io = require('socket.io')(server, {
+  cors: {
+    origin: ['http://localhost:3000']
+  }
+})
+require('./socket')(io);
