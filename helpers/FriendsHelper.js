@@ -22,32 +22,31 @@ module.exports = {
                 const resultsWithStatus = await Promise.all(searchResults.map(async (friend) => {
                     const status = await friendModel.aggregate([
                         { $match: { userId: new mongoose.Types.ObjectId(user) } },
-                        // {
-                        //     $addFields: {
-                        //         status: {
-                        //             $cond: {
-                        //                 if: { $in: [friend._id.toString(), "$friends"] }, then: "friends",
-                        //                 else: {
-                        //                     $cond: {
-                        //                         if: { $in: [friend._id.toString(), "$pending"] }, then: "pending",
-                        //                         else: {
-                        //                             $cond: {
-                        //                                 if: { $in: [friend._id.toString(), "$requests"] }, then: "requests",
-                        //                                 else: null
-                        //                             }
-                        //                         }
-                        //                     }
-                        //                 }
-                        //             }
-                        //         }
-                        //     }
-                        // },
-                        // { "$project": { _id: 0, status: 1 } }
+                        {
+                            $addFields: {
+                                status: {
+                                    $cond: {
+                                        if: { $in: [new mongoose.Types.ObjectId(friend._id), "$friends"] }, then: "friends",
+                                        else: {
+                                            $cond: {
+                                                if: { $in: [new mongoose.Types.ObjectId(friend._id), "$pending"] }, then: "pending",
+                                                else: {
+                                                    $cond: {
+                                                        if: { $in: [new mongoose.Types.ObjectId(friend._id), "$requests"] }, then: "requests",
+                                                        else: null
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        { "$project": { _id: 0, status: 1 } }
                     ]);
 
                     // Return a updated object with the friend's data and status
-                    console.log(status);
-                    // return { ...friend, status: status[0].status };
+                    return { ...friend, status: status[0].status };
                 }));
                 resolve(resultsWithStatus);
             } catch (err) {
@@ -125,32 +124,22 @@ module.exports = {
                     {
                         $match: { userId: new mongoose.Types.ObjectId(user) }
                     },
-                    { $unwind: '$pending' },
                     {
                         $lookup: {
-                            from: 'users',
-                            localField: 'pending',
-                            foreignField: '_id',
-                            as: 'pendingReq'
+                            from: "users",
+                            localField: "pending",
+                            foreignField: "_id",
+                            as: "pendingRequests"
+                        }
+                    },
+                    {
+                        $project: {
+                            _id: 0,
+                            pendingRequests: 1
                         }
                     }
-                    // {
-                    //     $lookup: {
-                    //         from: "users",
-                    //         localField: "pending",
-                    //         foreignField: "_id",
-                    //         as: "pendingRequests"
-                    //     }
-                    // },
-                    // {
-                    //     $project: {
-                    //         _id: 0,
-                    //         pendingRequests: 1
-                    //     }
-                    // }
                 ])
-                console.log(requestList[0]);
-                resolve();
+                resolve(requestList[0].pendingRequests);
             } catch (err) {
                 reject(err);
             }

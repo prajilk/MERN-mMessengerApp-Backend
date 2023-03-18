@@ -15,8 +15,11 @@ module.exports = (io) => {
         });
 
         socket.on('sent-request', (user, receiver) => {
-            friendsHelper.sendRequest(user, receiver).then();
-            socket.to(receiver).emit('friend-request-notification');
+            friendsHelper.sendRequest(user, receiver).then(()=>{
+                friendsHelper.getFriendsRequests(receiver).then((res)=>{
+                    socket.to(receiver).emit('friend-request-notification', res);
+                });
+            });
         })
         socket.on('accept-request', (user, receiver)=>{
             friendsHelper.acceptRequest(user, receiver).then();

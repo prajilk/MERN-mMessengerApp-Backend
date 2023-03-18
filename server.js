@@ -54,11 +54,11 @@ app.get("/signout", (req, res) => {
   res.json({});
 });
 
-friendsHelper.getFriendsRequests("641329c3e7de1977597c2172").then()
-
 app.get('/get-friends-requests', async (req, res) => {
-  friendsHelper.getFriendsRequests(req.session.user._id).then((res)=>{
-    
+  friendsHelper.getFriendsRequests(req.session.user._id).then((frndReqs) => {
+    frndReqs = frndReqs
+      .map(({ password, email, ...rest }) => rest)
+    res.status(200).json({frndReqs});
   });
 })
 
@@ -66,10 +66,10 @@ app.post("/find-friends", async (req, res) => {
   let query = req.body.query.trim();
   let searchResults = await friendsHelper.findFriends(query);
   searchResults = searchResults
-                    .map(({password, email, ...rest}) => rest)
-                    .filter((data) => data._id.toString() !== req.session.user._id.toString() && data )
+    .map(({ password, email, ...rest }) => rest)
+    .filter((data) => data._id.toString() !== req.session.user._id.toString() && data)
   searchResults = await friendsHelper.addFriendsStatus(req.session.user._id, searchResults)
-  res.send({searchResults});
+  res.send({ searchResults });
 })
 
 app.post("/signin", async (req, res) => {

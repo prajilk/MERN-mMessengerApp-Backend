@@ -30,7 +30,9 @@ module.exports = {
             } else {
                 userData.password = await bcrypt.hash(userData.password, 10)
                 userData.color = generateRandomColor();
-                new userModel(userData).save();
+                await new userModel(userData).save();
+                const validUser = await userModel.findOne({email: userData.email});
+                await new friendModel({userId: validUser._id}).save();
                 resolve();
             }
         })
