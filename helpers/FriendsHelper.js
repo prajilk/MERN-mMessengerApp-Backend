@@ -15,6 +15,28 @@ module.exports = {
             resolve(searchResults);
         })
     },
+    getFriendsList: (user)=>{
+        return new Promise(async (resolve, reject)=>{
+            const friendsList = await friendModel.aggregate([
+                {$match: {userId: new mongoose.Types.ObjectId(user)} },
+                {
+                    $lookup: {
+                        from: "users",
+                        localField: "friends",
+                        foreignField: "_id",
+                        as: "friendsList"
+                    }
+                },
+                {
+                    $project: {
+                        _id: 0,
+                        friendsList: 1
+                    }
+                }
+            ])
+            resolve(friendsList[0].friendsList);
+        })
+    },
     addFriendsStatus: (user, searchResults) => {
         return new Promise(async (resolve, reject) => {
             try {

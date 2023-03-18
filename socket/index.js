@@ -8,8 +8,8 @@ module.exports = (io) => {
 
 		socket.on('disconnect', () => {
             console.log("Device disconnected: " + socket.id);
-        }); 
-
+        });
+        
         socket.on('joinRoom', (roomId) => {
             socket.join(roomId);
         });
@@ -22,7 +22,11 @@ module.exports = (io) => {
             });
         })
         socket.on('accept-request', (user, receiver)=>{
-            friendsHelper.acceptRequest(user, receiver).then();
+            friendsHelper.acceptRequest(user, receiver).then(()=>{
+                friendsHelper.getFriendsList(receiver).then((res)=>{
+                    socket.to(receiver).emit('update-friend-list', res);
+                })
+            });
         })
         socket.on('reject-request', (user, receiver)=>{
             friendsHelper.rejectRequest(user, receiver).then();

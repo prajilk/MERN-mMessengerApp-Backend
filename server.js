@@ -54,11 +54,19 @@ app.get("/signout", (req, res) => {
   res.json({});
 });
 
+app.get('/get-friends', (req, res) => {
+  friendsHelper.getFriendsList(req.session.user._id).then((friendsList) => {
+    friendsList = friendsList.map(({ password, email, ...rest }) => rest)
+    // socket.to(roomId).emit('get-friends', friendsList);
+    res.status(200).json({friendsList});
+  })
+})
+
 app.get('/get-friends-requests', async (req, res) => {
   friendsHelper.getFriendsRequests(req.session.user._id).then((frndReqs) => {
     frndReqs = frndReqs
       .map(({ password, email, ...rest }) => rest)
-    res.status(200).json({frndReqs});
+    res.status(200).json({ frndReqs });
   });
 })
 
