@@ -49,10 +49,18 @@ app.get('/session', async (req, res) => {
   }
 })
 
-app.get("/signout", async (req, res) => {
+app.get("/signout", (req, res) => {
   req.session.destroy();
   res.json({});
 });
+
+friendsHelper.getFriendsRequests("641329c3e7de1977597c2172").then()
+
+app.get('/get-friends-requests', async (req, res) => {
+  friendsHelper.getFriendsRequests(req.session.user._id).then((res)=>{
+    
+  });
+})
 
 app.post("/find-friends", async (req, res) => {
   let query = req.body.query.trim();

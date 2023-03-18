@@ -1,6 +1,7 @@
 const model = require('../db/dbModels')
 const bcrypt = require("bcrypt");
 const userModel = model.Users();
+const friendModel = model.Friends()
 
 // Genarate random color for user avatar
 function generateRandomColor(){
@@ -40,6 +41,13 @@ module.exports = {
             if(validUser){
                 try{
                     if(await bcrypt.compare(userData.password, validUser.password)){
+                        await friendModel.findOneAndUpdate(
+                            { userId: validUser._id },
+                            {
+                                $push: { friends: [] }
+                            },
+                            { upsert: true, new: true }
+                        )
                         resolve(validUser);
                     } else {
                         reject();

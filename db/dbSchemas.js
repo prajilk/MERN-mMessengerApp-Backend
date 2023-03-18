@@ -15,9 +15,9 @@ module.exports = {
     friendSchema: ()=>{
         const friendSchema = Schema({
             userId: mongoose.Schema.Types.ObjectId,
-            friends: Array,
-            requests: Array,
-            pending: Array
+            friends: [mongoose.Schema.Types.ObjectId],
+            requests: [mongoose.Schema.Types.ObjectId],
+            pending: [mongoose.Schema.Types.ObjectId]
         },{collection: 'friends', versionKey: false})
         return friendSchema;
     }
