@@ -6,6 +6,8 @@ const MongoDBStore = require('connect-mongodb-session')(session);
 const connect = require('./db/dbConnection');
 const userHelper = require("./helpers/UserHelper");
 const friendsHelper = require("./helpers/FriendsHelper");
+const chatHelper = require("./helpers/ChatHelper");
+const { decrypt } = require("./Encryption/encrypt");
 
 const app = express();
 app.use(express.json());
@@ -58,7 +60,7 @@ app.get('/get-friends', (req, res) => {
   friendsHelper.getFriendsList(req.session.user._id).then((friendsList) => {
     friendsList = friendsList.map(({ password, email, ...rest }) => rest)
     // socket.to(roomId).emit('get-friends', friendsList);
-    res.status(200).json({friendsList});
+    res.status(200).json({ friendsList });
   })
 })
 
@@ -68,6 +70,27 @@ app.get('/get-friends-requests', async (req, res) => {
       .map(({ password, email, ...rest }) => rest)
     res.status(200).json({ frndReqs });
   });
+})
+
+app.get('/get-chat-list', async (req, res) => {
+  chatHelper.getChatList(req.session.user._id).then((chatList) => {
+    chatList = chatList
+      .map((chat) => {
+        const { password, email, ...rest } = chat.receiver_details;
+        return { chats: chat.chats.reverse(), receiver_details: rest };
+      })
+    // Loop through the chats array
+    for (let i = 0; i < chatList.length; i++) {
+      // Get the messages array for the current chat
+      const chats = chatList[i].chats;
+
+      // Loop through the messages array and update the message value
+      for (let j = 0; j < chats.length; j++) {
+        chats[j].message = decrypt(chats[j].message);
+      }
+    }
+    res.status(200).json(chatList);
+  })
 })
 
 app.post("/find-friends", async (req, res) => {
