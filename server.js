@@ -14,7 +14,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.use(cors({
-  origin: ['http://localhost:3000', 'https://mern-mmessenger.onrender.com'],
+  origin: ['http://localhost:3000', 'https://mern-mmessenger.onrender.com','http://192.168.18.25:3000'],
   methods: ['GET', 'POST'],
   credentials: true
 }));
@@ -40,8 +40,6 @@ app.use(session({
 connect()
 
 app.get('/session', async (req, res) => {
-  console.log(req.session.user);
-  console.log(req.session);
   if (req.session.user) {
     const user = Object.assign({}, req.session.user);
     delete user.password;
@@ -124,7 +122,7 @@ const server = app.listen(5000, () => console.log(`Server running on port 5000`)
 
 const io = require('socket.io')(server, {
   cors: {
-    origin: ['http://localhost:3000', 'https://mern-mmessenger.onrender.com']
+    origin: ['http://localhost:3000', 'https://mern-mmessenger.onrender.com','http://192.168.18.25:3000']
   }
 })
 require('./socket')(io);
