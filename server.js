@@ -30,7 +30,7 @@ const store = new MongoDBStore({
 // Express Session
 app.use(session({
   secret: "myKeyFormMessenger",
-  saveUninitialized: true,
+  saveUninitialized: false,
   resave: false,
   store: store,
   cookie: { maxAge: 30 * 24 * 60 * 60 * 1000 }
@@ -106,7 +106,6 @@ app.post("/find-friends", async (req, res) => {
 app.post("/signin", async (req, res) => {
   userHelper.signIn(req.body).then((user) => {
     req.session.user = user;
-    console.log("session user:", req.session.user);
     res.json({ error: false })
   }).catch(() => {
     res.json({ error: true })
