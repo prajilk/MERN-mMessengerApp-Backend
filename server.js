@@ -25,9 +25,10 @@ app.options('*', cors({
 }));
 
 app.use(function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", "https://mern-mmessenger.onrender.com");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-  res.header("Access-Control-Allow-Credentials", true);
+  res.setHeader("Access-Control-Allow-Origin", "https://mern-mmessenger.onrender.com");
+  res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  res.setHeader("Access-Control-Allow-Credentials", true);
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS")
   next();
 });
 
