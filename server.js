@@ -33,7 +33,7 @@ app.use(session({
   saveUninitialized: false,
   resave: false,
   store: store,
-  cookie: { maxAge: 30 * 24 * 60 * 60 * 1000 }
+  cookie: { maxAge: 30 * 24 * 60 * 60 * 1000, sameSite: "none", secure: "auto"}
 }))
 
 // Connect to mongodb database
