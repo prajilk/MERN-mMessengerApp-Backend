@@ -15,7 +15,7 @@ app.use(cookieParser());
 
 app.use(cors({
   origin: ['http://localhost:3000', 'https://mern-mmessenger.onrender.com','http://192.168.18.25:3000'],
-  methods: ['GET', 'POST'],
+  methods: ['GET', 'POST', 'OPTIONS'],
   credentials: true
 }));
 
@@ -33,7 +33,7 @@ app.use(session({
   saveUninitialized: false,
   resave: false,
   store: store,
-  cookie: { maxAge: 30 * 24 * 60 * 60 * 1000, sameSite: "none", secure: true}
+  cookie: { maxAge: 30 * 24 * 60 * 60 * 1000 }
 }))
 
 // Connect to mongodb database
@@ -122,7 +122,8 @@ const server = app.listen(5000, () => console.log(`Server running on port 5000`)
 
 const io = require('socket.io')(server, {
   cors: {
-    origin: ['http://localhost:3000', 'https://mern-mmessenger.onrender.com','http://192.168.18.25:3000']
+    origin: ['http://localhost:3000', 'https://mern-mmessenger.onrender.com','http://192.168.18.25:3000'],
+    credentials: true
   }
 })
 require('./socket')(io);
