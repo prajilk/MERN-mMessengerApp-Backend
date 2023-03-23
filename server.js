@@ -105,9 +105,8 @@ app.post("/find-friends", async (req, res) => {
 
 app.post("/signin", async (req, res) => {
   userHelper.signIn(req.body).then((user) => {
-    console.log("user:", user);
     req.session.user = user;
-    console.log(("session user:", req.session.user));
+    console.log("session user:", req.session.user);
     res.json({ error: false })
   }).catch(() => {
     res.json({ error: true })
