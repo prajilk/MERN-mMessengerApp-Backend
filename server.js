@@ -24,6 +24,14 @@ app.options('*', cors({
   credentials: true
 }));
 
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "https://mern-mmessenger.onrender.com");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  res.header("Access-Control-Allow-Credentials", true);
+  next();
+});
+
+
 app.use(express.urlencoded({ extended: false }));
 
 // MongoDB session store
