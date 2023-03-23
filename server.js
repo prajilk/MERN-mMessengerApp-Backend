@@ -24,15 +24,13 @@ app.use(express.urlencoded({ extended: false }));
 // MongoDB session store
 const store = new MongoDBStore({
   uri: process.env.MONGODB_URI,
-  collection: 'sessions',
-  autoRemove: 'interval',
-  autoRemoveInterval: 5, // remove expired sessions every 5 minutes
+  collection: 'sessions'
 });
 
 // Express Session
 app.use(session({
   secret: "myKeyFormMessenger",
-  saveUninitialized: false,
+  saveUninitialized: true,
   resave: false,
   store: store,
   cookie: { maxAge: 30 * 24 * 60 * 60 * 1000 }
@@ -42,6 +40,8 @@ app.use(session({
 connect()
 
 app.get('/session', async (req, res) => {
+  console.log(req.session.user);
+  console.log(req.session);
   if (req.session.user) {
     const user = Object.assign({}, req.session.user);
     delete user.password;
