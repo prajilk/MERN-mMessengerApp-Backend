@@ -13,11 +13,11 @@ const app = express();
 app.use(express.json());
 app.use(cookieParser());
 
-app.use(cors({
-  origin: ['http://localhost:3000', 'https://mern-mmessenger.onrender.com','http://192.168.18.25:3000'],
-  methods: ['GET', 'POST', 'OPTIONS'],
-  credentials: true
-}));
+// app.use(cors({
+//   origin: ['http://localhost:3000', 'https://mern-mmessenger.onrender.com','http://192.168.18.25:3000'],
+//   methods: ['GET', 'POST', 'OPTIONS'],
+//   credentials: true
+// }));
 
 app.options('*', cors({
   origin: 'https://mern-mmessenger.onrender.com',
@@ -38,7 +38,7 @@ app.use(session({
   saveUninitialized: false,
   resave: false,
   store: store,
-  cookie: { maxAge: 30 * 24 * 60 * 60 * 1000 }
+  cookie: { maxAge: 30 * 24 * 60 * 60 * 1000, sameSite:"none", secure: true }
 }))
 
 // Connect to mongodb database
