@@ -124,7 +124,7 @@ const server = app.listen(5000, () => console.log(`Server running on port 5000`)
 
 const io = require('socket.io')(server, {
   cors: {
-    origin: ['http://localhost:3000']
+    origin: ['http://localhost:3000', 'https://mern-mmessenger.onrender.com']
   }
 })
 require('./socket')(io);
