@@ -15,12 +15,6 @@ app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-// app.use(cors({
-//   origin: ['http://localhost:3000', 'https://mern-mmessenger.onrender.com','http://192.168.18.25:3000'],
-//   methods: ['GET', 'POST', 'OPTIONS'],
-//   credentials: true
-// }));
-
 app.use(function(req, res, next) {
   res.setHeader("Access-Control-Allow-Origin", "https://mern-mmessenger.onrender.com");
   res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
@@ -43,24 +37,22 @@ const store = new MongoDBStore({
 
 // Express Session
 app.use(session({
-  name: "mySessionCookieFoMMessnger",
   secret: "myKeyFormMessenger",
   saveUninitialized: false,
   resave: false,
   store: store,
-  cookie: { 
-    httpOnly: true, 
-    sameSite:"none", 
-    secure: true, 
-    maxAge: 30 * 24 * 60 * 60 * 1000,
-    domain: "mern-mmessenger.onrender.com" }
+  cookie: {
+    httpOnly: true,
+    sameSite: "none",
+    secure,
+    maxAge: 30 * 24 * 60 * 60 * 1000
+  }
 }))
 
 // Connect to mongodb database
 connect()
 
 app.get('/session', async (req, res) => {
-  console.log(req.session);
   if (req.session.user) {
     const user = Object.assign({}, req.session.user);
     delete user.password;
