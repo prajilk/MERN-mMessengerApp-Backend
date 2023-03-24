@@ -43,11 +43,17 @@ const store = new MongoDBStore({
 
 // Express Session
 app.use(session({
+  name: "mySessionCookieFoMMessnger",
   secret: "myKeyFormMessenger",
   saveUninitialized: false,
   resave: false,
   store: store,
-  cookie: { httpOnly: true, sameSite:"none", secure: true, maxAge: 30 * 24 * 60 * 60 * 1000  }
+  cookie: { 
+    httpOnly: true, 
+    sameSite:"none", 
+    secure: true, 
+    maxAge: 30 * 24 * 60 * 60 * 1000,
+    domain: "https://mern-mmessenger.onrender.com" }
 }))
 
 // Connect to mongodb database
