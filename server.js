@@ -10,19 +10,16 @@ const chatHelper = require("./helpers/ChatHelper");
 const { decrypt } = require("./Encryption/encrypt");
 
 const app = express();
-app.use(express.json());
+
 app.use(cookieParser());
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 
 // app.use(cors({
 //   origin: ['http://localhost:3000', 'https://mern-mmessenger.onrender.com','http://192.168.18.25:3000'],
 //   methods: ['GET', 'POST', 'OPTIONS'],
 //   credentials: true
 // }));
-
-app.options('*', cors({
-  origin: 'https://mern-mmessenger.onrender.com',
-  credentials: true
-}));
 
 app.use(function(req, res, next) {
   res.setHeader("Access-Control-Allow-Origin", "https://mern-mmessenger.onrender.com");
@@ -32,8 +29,11 @@ app.use(function(req, res, next) {
   next();
 });
 
-
-app.use(express.urlencoded({ extended: false }));
+app.use(cors({
+  origin: ['http://localhost:3000', 'https://mern-mmessenger.onrender.com', 'http://192.168.18.25:3000'],
+  credentials: true,
+  allowedHeaders: true
+}))
 
 // MongoDB session store
 const store = new MongoDBStore({
@@ -47,13 +47,14 @@ app.use(session({
   saveUninitialized: false,
   resave: false,
   store: store,
-  cookie: { maxAge: 30 * 24 * 60 * 60 * 1000, sameSite:"none", secure: true }
+  cookie: { httpOnly: true, sameSite:"none", secure: true, maxAge: 30 * 24 * 60 * 60 * 1000  }
 }))
 
 // Connect to mongodb database
 connect()
 
 app.get('/session', async (req, res) => {
+  console.log(req.session);
   if (req.session.user) {
     const user = Object.assign({}, req.session.user);
     delete user.password;
