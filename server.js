@@ -53,7 +53,7 @@ app.use(session({
     sameSite:"none", 
     secure: true, 
     maxAge: 30 * 24 * 60 * 60 * 1000,
-    domain: "https://mern-mmessenger.onrender.com" }
+    domain: "mern-mmessenger.onrender.com" }
 }))
 
 // Connect to mongodb database
