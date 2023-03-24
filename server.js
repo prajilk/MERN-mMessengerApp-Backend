@@ -15,18 +15,18 @@ app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-app.use(function(req, res, next) {
-  res.setHeader("Access-Control-Allow-Origin", "https://mern-mmessenger.onrender.com");
-  res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-  res.setHeader("Access-Control-Allow-Credentials", true);
-  res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS")
-  next();
-});
+// app.use(function(req, res, next) {
+//   res.setHeader("Access-Control-Allow-Origin", "https://mern-mmessenger.onrender.com");
+//   res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+//   res.setHeader("Access-Control-Allow-Credentials", true);
+//   res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS")
+//   next();
+// });
 
 app.use(cors({
   origin: ['http://localhost:3000', 'https://mern-mmessenger.onrender.com', 'http://192.168.18.25:3000'],
   credentials: true,
-  allowedHeaders: true
+  optionsSuccessStatus: 200
 }))
 
 // MongoDB session store
@@ -44,7 +44,7 @@ app.use(session({
   cookie: {
     httpOnly: true,
     sameSite: "none",
-    secure: "auto",
+    secure: true,
     maxAge: 30 * 24 * 60 * 60 * 1000
   }
 }))
