@@ -25,7 +25,8 @@ const refreshToken = (req, res, next, callback) => {
             res.cookie('accessToken', accessToken, {
                 httpOnly: true,
                 sameSite: 'none',
-                secure: true
+                secure: true,
+                maxAge: 1296000000 // 15 Days
             });
 
             // Update the accessToken with new accessToken

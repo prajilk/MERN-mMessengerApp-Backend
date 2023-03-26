@@ -20,14 +20,16 @@ const createTokens = (req, res) => {
         res.cookie('refreshToken', refreshToken, {
             httpOnly: true,
             sameSite: 'none',
-            secure: true
+            secure: true,
+            maxAge: 1296000000 // 15 Days
         });
 
         // Set access token in cookie
         res.cookie('accessToken', accessToken, {
             httpOnly: true,
             sameSite: 'none',
-            secure: true
+            secure: true,
+            maxAge: 1296000000 // 15 Days
         });
 
         return res.status(200).json({ error: false })
