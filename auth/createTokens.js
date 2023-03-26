@@ -1,0 +1,39 @@
+const jwt = require('jsonwebtoken');
+require('dotenv').config();
+const userHelper = require('../helpers/UserHelper');
+
+const createTokens = (req, res) => {
+
+    userHelper.signIn(req.body).then((validUser) => {
+        // Remove the password from the validUser
+        const user = Object.assign({}, validUser);
+        delete user._doc.password;
+        delete user._doc.email;
+
+        // Generate access token (expires in 10 minutes)
+        const accessToken = jwt.sign(user._doc, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15m' });
+
+        // Generate refresh token (expires in 7 days)
+        const refreshToken = jwt.sign(user._doc, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '15d' });
+
+        // Set refresh token in cookie
+        res.cookie('refreshToken', refreshToken, {
+            httpOnly: true,
+            sameSite: 'none',
+            secure: true
+        });
+
+        // Set access token in cookie
+        res.cookie('accessToken', accessToken, {
+            httpOnly: true,
+            sameSite: 'none',
+            secure: true
+        });
+
+        return res.status(200).json({ error: false })
+    }).catch(() => {
+        return res.status(401).json({ error: true })
+    })
+}
+
+module.exports = createTokens;
