@@ -47,6 +47,13 @@ app.get('/get-friends',getUser, (req, res, next) => {
   })
 })
 
+app.post('/ready-to-send-message', (req, res, next)=>{
+  
+  chatHelper.addToChatList(req.body.user._id, req.body.recipientId).then(()=>{
+    res.status(200).json({data: "success", error: false})
+  })
+})
+
 app.get('/get-friends-requests', getUser, async (req, res, next) => {
   const user = req.user; // Adding user details from getUser middleware
   friendsHelper.getFriendsRequests(user._id).then((frndReqs) => {

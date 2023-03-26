@@ -7,7 +7,7 @@ module.exports = {
         return new Promise(async (resolve, reject) => {
             await chatModel.findOneAndUpdate(
                 { $or: [{ user_1: user._id, user_2: receiver }, { user_1: receiver, user_2: user._id }] },
-                {user_1: user._id, user_2: receiver},
+                {user_1: user, user_2: receiver},
                 { upsert: true });
             resolve();
         })
