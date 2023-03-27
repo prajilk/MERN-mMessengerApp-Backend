@@ -34,10 +34,10 @@ app.get('/validate-user', verifyToken, (req, res, next) => { })
 app.get("/signout", (req, res) => {
   res.clearCookie("accessToken");
   res.clearCookie("refreshToken");
-  res.status(200).json({data: 'Signed out successfully', error: false});
+  res.status(200).json({ data: 'Signed out successfully', error: false });
 });
 
-app.get('/get-friends',getUser, (req, res, next) => {
+app.get('/get-friends', getUser, (req, res, next) => {
 
   const user = req.user; // Adding user details from getUser middleware
 
@@ -47,10 +47,9 @@ app.get('/get-friends',getUser, (req, res, next) => {
   })
 })
 
-app.post('/ready-to-send-message', (req, res, next)=>{
-  
-  chatHelper.addToChatList(req.body.user._id, req.body.recipientId).then(()=>{
-    res.status(200).json({data: "success", error: false})
+app.post('/ready-to-send-message', (req, res, next) => {
+  chatHelper.addToChatList(req.body.user._id, req.body.recipientId).then(() => {
+    res.status(200).json({ data: "success", error: false })
   })
 })
 
