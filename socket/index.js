@@ -20,19 +20,19 @@ module.exports = (io) => {
             socket.join(roomId);
         });
 
-        socket.on('signout', (user)=>{
+        socket.on('signout', (user) => {
             const keyToDelete = Object.keys(users).find(key => users[key] === user);
             delete users[keyToDelete];
         })
 
         socket.on('check-online', (userId, callback) => {
-            if(Object.values(users).indexOf(userId) > -1)
+            if (Object.values(users).indexOf(userId) > -1)
                 callback(true)
             else
                 callback(false)
         })
 
-        socket.on('sendTyping', (user, receiver) =>{
+        socket.on('sendTyping', (user, receiver) => {
             socket.to(receiver).emit('sendTyping', user._id)
         })
 
