@@ -18,7 +18,6 @@ const createTokens = (req, res) => {
 
         // Set refresh token in cookie
         res.cookie('refreshToken', refreshToken, {
-            domain: '.onrender.com',
             httpOnly: true,
             sameSite: 'none',
             secure: true,
@@ -27,7 +26,6 @@ const createTokens = (req, res) => {
 
         // Set access token in cookie
         res.cookie('accessToken', accessToken, {
-            domain: '.onrender.com',
             httpOnly: true,
             sameSite: 'none',
             secure: true,
