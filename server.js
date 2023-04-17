@@ -32,8 +32,8 @@ connect()
 app.get('/validate-user', verifyToken, (req, res, next) => { })
 
 app.get("/signout", (req, res) => {
-  res.clearCookie("accessToken", { domain: '.onrender.com' });
-  res.clearCookie("refreshToken", { domain: '.onrender.com' });
+  res.clearCookie("accessToken");
+  res.clearCookie("refreshToken");
   res.status(200).json({ data: 'Signed out successfully', error: false });
 });
 
