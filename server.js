@@ -32,8 +32,18 @@ connect()
 app.get('/validate-user', verifyToken, (req, res, next) => { })
 
 app.get("/signout", (req, res) => {
-  res.clearCookie("accessToken", {domain: 'mern-mmessenger-api.onrender.com'});
-  res.clearCookie("refreshToken", {domain: 'mern-mmessenger-api.onrender.com'});
+  res.cookie('accessToken', '', {
+    httpOnly: true,
+    sameSite: 'none',
+    secure: true,
+    expires: new Date(0)
+  });
+  res.cookie('refreshToken', '', { 
+    httpOnly: true,
+    sameSite: 'none',
+    secure: true,
+    expires: new Date(0)
+  });
   res.status(200).json({ data: 'Signed out successfully', error: false });
 });
 
