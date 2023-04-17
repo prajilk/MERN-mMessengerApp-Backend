@@ -23,6 +23,7 @@ const refreshToken = (req, res, next, callback) => {
 
             // Set new access token in cookie
             res.cookie('accessToken', accessToken, {
+                domain: '.onrender.com',
                 httpOnly: true,
                 sameSite: 'none',
                 secure: true,
@@ -38,8 +39,8 @@ const refreshToken = (req, res, next, callback) => {
             return callback(req, res, next);
 
         } catch (err) {
-            res.clearCookie('refreshToken');
-            res.clearCookie('accessToken');
+            res.clearCookie('refreshToken', { domain: '.onrender.com' });
+            res.clearCookie('accessToken', { domain: '.onrender.com' });
             return res.status(401).json({ data: 'Refresh token is invalid', error: true });
         }
     } else {
